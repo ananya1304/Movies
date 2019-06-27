@@ -8,6 +8,13 @@
         android:orientation="vertical"
         tools:context=".details.DetailsActivity">
 
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_collapseMode="pin"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
     <FrameLayout
             android:id="@+id/movie_details_container"
             android:layout_width="match_parent"

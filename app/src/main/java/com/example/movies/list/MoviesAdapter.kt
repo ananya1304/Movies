@@ -17,14 +17,8 @@ import com.example.movies.R
 import com.example.movies.model.Movie
 import com.example.movies.network.ApiClient
 
-class MoviesAdapter(private val mContext: Context?, private var movieList: List<Movie>, private val listFragment: ListFragment) :
+class MoviesAdapter(private val listActivity: ListActivity, private var movieList: List<Movie>) :
     RecyclerView.Adapter<MoviesAdapter.MyViewHolder>(){
-    private val originalMovieList: List<Movie>
-
-
-    init {
-        this.originalMovieList = movieList
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -42,7 +36,7 @@ class MoviesAdapter(private val mContext: Context?, private var movieList: List<
         holder.tvReleaseDate.text = movie.releaseDate
 
         // loading album cover using Glide library
-        Glide.with(mContext!!)
+        Glide.with(listActivity)
             .load(ApiClient.IMAGE_BASE_URL + movie.thumbPath)
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(
@@ -69,7 +63,7 @@ class MoviesAdapter(private val mContext: Context?, private var movieList: List<
             .apply(RequestOptions().placeholder(R.drawable.ic_place_holder).error(R.drawable.ic_place_holder))
             .into(holder.ivMovieThumb)
 
-        holder.itemView.setOnClickListener { listFragment.onMovieItemClick(position) }
+        holder.itemView.setOnClickListener { listActivity.onMovieItemClick(position) }
 
     }
 
