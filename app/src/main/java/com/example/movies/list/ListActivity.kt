@@ -17,6 +17,15 @@ class ListActivity: AppCompatActivity(){
         setContentView(R.layout.activity_movie_list)
 
         supportActionBar!!.title = getString(R.string.most_popular_movies)
+        var calendar: Calendar =  Calendar.getInstance()
+
+        calendar.set(Calendar.HOUR_OF_DAY, 10)
+        val intent: Intent = Intent(applicationContext, NotificationReciever::class.java)
+        var pendingIntent: PendingIntent = PendingIntent.getBroadcast(applicationContext, 100, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        var alarmManager: AlarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
+
         val listFragment = supportFragmentManager.findFragmentById(R.id.frameLayout)
         as ListFragment? ?: ListFragment.newInstance(this).also{
             replaceFragmentInActivity(it, R.id.frameLayout)
