@@ -1,20 +1,18 @@
-package com.example.movies.list
+package com.example.movies.details
 
 
 import com.example.movies.model.Movie
 
-interface ListContract {
-
+interface DetailsContract {
     interface Model {
 
         interface OnFinishedListener {
-            fun onFinished(movieArrayList: List<Movie>)
+            fun onFinished(movie: Movie)
 
             fun onFailure(t: Throwable)
         }
 
-        fun getMovieList(onFinishedListener: OnFinishedListener, pageNo: Int)
-
+        fun getMovieDetails(onFinishedListener: OnFinishedListener, movieId: Int)
     }
 
     interface View {
@@ -23,18 +21,14 @@ interface ListContract {
 
         fun hideProgress()
 
-        fun setDataToRecyclerView(movieArrayList: List<Movie>)
+        fun setDataToViews(movie: Movie)
 
         fun onResponseFailure(throwable: Throwable)
-
     }
 
     interface Presenter {
 
-        fun getMoreData(pageNo: Int)
-
-        fun requestDataFromServer()
-
+        fun requestMovieData()
 
     }
 }

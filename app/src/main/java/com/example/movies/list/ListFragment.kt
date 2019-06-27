@@ -1,5 +1,6 @@
 package com.example.movies.list
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -13,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.example.movies.R
+import com.example.movies.details.DetailsActivity
 import com.example.movies.model.Movie
 import com.example.movies.utils.Constants.KEY_MOVIE_ID
 import com.example.movies.utils.GridSpacingItemDecoration
@@ -20,9 +22,8 @@ import com.example.movies.utils.GridSpacingItemDecoration.Companion.dpToPx
 import java.util.ArrayList
 
 class ListFragment: Fragment(), ListContract.View {
-    override var presenter: ListContract.Presenter
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-        set(value) {}
+
+    private lateinit var presenter: ListPresenter
     private val TAG = "MovieListActivity"
     private lateinit var rvMovieList: RecyclerView
     private lateinit var moviesList: MutableList<Movie>
@@ -36,12 +37,20 @@ class ListFragment: Fragment(), ListContract.View {
     internal var visibleItemCount: Int = 0
     internal var totalItemCount: Int = 0
     private var mLayoutManager: GridLayoutManager? = null
+    private lateinit var root: View
 
     private var pageNo = 1
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        moviesList = ArrayList()
+        moviesAdapter = MoviesAdapter(context, moviesList, this@ListFragment)
+        rvMovieList.adapter = moviesAdapter
+        mLayoutManager = GridLayoutManager(context, 2)
+        rvMovieList.layoutManager = mLayoutManager
+        rvMovieList.addItemDecoration(GridSpacingItemDecoration(2, dpToPx(context, 10), true))
+        rvMovieList.itemAnimator = DefaultItemAnimator()
         setListeners()
-        presenter.setView(this)
+        presenter = ListPresenter(this)
     }
 
     private fun setListeners() {
@@ -69,27 +78,15 @@ class ListFragment: Fragment(), ListContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstance: Bundle?): View? {
-        val root = inflater.inflate(R.layout.fragment_movie_list, container, false)
+        root = inflater.inflate(R.layout.fragment_movie_list, container, false)
         with(root) {
             rvMovieList = findViewById(R.id.rv_movie_list)
-
-            moviesList = ArrayList()
-            moviesAdapter = MoviesAdapter(ListFragment.newInstance(), moviesList)
-
-            mLayoutManager = GridLayoutManager(ListActivity.newInstance(), 2)
-            rvMovieList.layoutManager = mLayoutManager
-            rvMovieList.addItemDecoration(GridSpacingItemDecoration(2, dpToPx(ListActivity.newInstance(), 10), true))
-            rvMovieList.itemAnimator = DefaultItemAnimator()
-            rvMovieList.adapter = moviesAdapter
-
             pbLoading = findViewById(R.id.pb_loading)
-
             tvEmptyView = findViewById(R.id.tv_empty_view)
         }
 
         return root
     }
-
     override fun showProgress() {
         pbLoading.visibility = View.VISIBLE
     }
@@ -109,14 +106,14 @@ class ListFragment: Fragment(), ListContract.View {
     }
     companion object {
 
-        fun newInstance() = ListFragment()
+        fun newInstance(context: Context) = ListFragment()
     }
 
     fun onMovieItemClick(position: Int){
         if (position == -1) {
             return
         }
-        val detailIntent = Intent(this, DetailsActivity::class.java)
+        val detailIntent: Intent = Intent(ListActivity.newInstance(), DetailsActivity::class.java)
         detailIntent.putExtra(KEY_MOVIE_ID, moviesList[position].id)
         startActivity(detailIntent)
     }
@@ -132,4 +129,6 @@ class ListFragment: Fragment(), ListContract.View {
         rvMovieList.visibility = View.VISIBLE
         tvEmptyView.visibility = View.GONE
     }
+
+
 }

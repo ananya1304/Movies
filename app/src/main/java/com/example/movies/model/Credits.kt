@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 class Credits {
 
     @SerializedName("cast")
-    var cast: List<Cast>? = null
+    lateinit var cast: Collection<Cast>
 }

@@ -1,4 +1,4 @@
-package com.example.movies.list
+package com.example.movies.details
 
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -6,7 +6,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -14,36 +16,28 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.example.movies.R
-import com.example.movies.model.Movie
+import com.example.movies.model.Cast
 import com.example.movies.network.ApiClient
 
-class MoviesAdapter(private val mContext: Context?, private var movieList: List<Movie>, private val listFragment: ListFragment) :
-    RecyclerView.Adapter<MoviesAdapter.MyViewHolder>(){
-    private val originalMovieList: List<Movie>
-
-
-    init {
-        this.originalMovieList = movieList
-    }
+class CastAdapter(private val mContext: Context?, private val castList: List<Cast>) :
+    RecyclerView.Adapter<CastAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.movie_card, parent, false)
+            .inflate(R.layout.cast_card, parent, false)
 
         return MyViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        val movie = movieList[position]
+        val cast = castList[position]
 
-        holder.tvMovieTitle.text = movie.title
-        holder.tvMovieRatings.text = (movie.rating).toString()
-        holder.tvReleaseDate.text = movie.releaseDate
+        holder.tvCharacter.setText(cast.character)
+        holder.tvName.setText(cast.name)
 
-        // loading album cover using Glide library
         Glide.with(mContext!!)
-            .load(ApiClient.IMAGE_BASE_URL + movie.thumbPath)
+            .load(ApiClient.IMAGE_BASE_URL + cast.profilePath)
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(
                     e: GlideException?,
@@ -51,7 +45,7 @@ class MoviesAdapter(private val mContext: Context?, private var movieList: List<
                     target: Target<Drawable>,
                     isFirstResource: Boolean
                 ): Boolean {
-                    holder.pbLoadImage.visibility = View.GONE
+                    holder.pbLoadProfile.visibility = View.GONE
                     return false
                 }
 
@@ -62,41 +56,35 @@ class MoviesAdapter(private val mContext: Context?, private var movieList: List<
                     dataSource: DataSource,
                     isFirstResource: Boolean
                 ): Boolean {
-                    holder.pbLoadImage.visibility = View.GONE
+                    holder.pbLoadProfile.visibility = View.GONE
                     return false
                 }
             })
             .apply(RequestOptions().placeholder(R.drawable.ic_place_holder).error(R.drawable.ic_place_holder))
-            .into(holder.ivMovieThumb)
-
-        holder.itemView.setOnClickListener { listFragment.onMovieItemClick(position) }
-
+            .into(holder.ivProfilePic)
     }
 
     override fun getItemCount(): Int {
-        return movieList.size
+        return castList.size
     }
 
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var tvMovieTitle: TextView
+        var tvCharacter: TextView
 
-        var tvMovieRatings: TextView
+        var tvName: TextView
 
-        var tvReleaseDate: TextView
+        var ivProfilePic: ImageView
 
-        var ivMovieThumb: ImageView
-
-        var pbLoadImage: ProgressBar
+        var pbLoadProfile: ProgressBar
 
         init {
 
-            tvMovieTitle = itemView.findViewById(R.id.tv_movie_title)
-            tvReleaseDate = itemView.findViewById(R.id.tv_release_date)
-            tvMovieRatings = itemView.findViewById(R.id.tv_movie_ratings)
-            ivMovieThumb = itemView.findViewById(R.id.iv_movie_thumb)
-            pbLoadImage = itemView.findViewById(R.id.pb_load_image)
+            tvCharacter = itemView.findViewById(R.id.tv_character)
+            tvName = itemView.findViewById(R.id.tv_name)
+            ivProfilePic = itemView.findViewById(R.id.iv_profile_pic)
+            pbLoadProfile = itemView.findViewById(R.id.pb_load_profile)
         }
     }
 }

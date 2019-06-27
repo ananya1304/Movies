@@ -36,8 +36,8 @@ class GridSpacingItemDecoration(
     }
 
     companion object {
-        fun dpToPx(context: Context, dp: Int): Int {
-            val r = context.resources
+        fun dpToPx(context: Context?, dp: Int): Int {
+            val r = context!!.resources
             return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), r.displayMetrics))
         }
     }
