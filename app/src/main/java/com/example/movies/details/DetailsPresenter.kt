@@ -2,10 +2,10 @@ package com.example.movies.details
 
 import com.example.movies.model.Movie
 
-class DetailsPresenter(detailsView: DetailsContract.View, id: Int): DetailsContract.Presenter, DetailsContract.Model.OnFinishedListener {
+class DetailsPresenter(detailsView: DetailsContract.View, id: Int, detailsModel: DetailsModel): DetailsContract.Presenter, DetailsContract.Model.OnFinishedListener {
 
     private var view: DetailsContract.View = detailsView
-    private var movieDetailsModel: DetailsContract.Model = DetailsModel()
+    private var movieDetailsModel: DetailsContract.Model = detailsModel
     private var movieId: Int = id
 
 

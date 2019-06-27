@@ -13,6 +13,6 @@ interface ApiInterface {
     fun getPopularMovies(@Query("api_key") apiKey: String, @Query("page") PageNo: Int): Call<MovieListResponse>
 
     @GET("movie/{movie_id}")
-    fun getMovieDetails(@Path("movie_id") movieId: Int, @Query("api_key") apiKey: String, @Query("append_to_response") credits: String): Call<Movie>
+    fun getMovieDetails(@Path("movie_id") movieId: Int, @Query("api_key") apiKey: String): Call<Movie>
 
 }

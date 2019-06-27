@@ -1,13 +1,12 @@
 package com.example.movies.details
 
-import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.CollapsingToolbarLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.RecyclerView
+
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.ImageView
@@ -20,12 +19,10 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.example.movies.R
-import com.example.movies.model.Cast
+
 import com.example.movies.model.Movie
 import com.example.movies.network.ApiClient
 import com.example.movies.utils.Constants.KEY_MOVIE_ID
-import com.example.movies.utils.replaceFragmentInActivity
-import java.util.ArrayList
 
 class DetailsActivity: AppCompatActivity(), DetailsContract.View {
     private lateinit var toolbar: Toolbar
@@ -35,16 +32,12 @@ class DetailsActivity: AppCompatActivity(), DetailsContract.View {
     private lateinit var tvMovieReleaseDate: TextView
     private lateinit var tvMovieRatings: TextView
     private lateinit var tvOverview: TextView
-    private lateinit var castAdapter: CastAdapter
-    private lateinit var castList: MutableList<Cast>
-    private lateinit var pbLoadCast: ProgressBar
     private lateinit var tvHomepageValue: TextView
     private lateinit var tvTaglineValue: TextView
     private lateinit var tvRuntimeValue: TextView
     private lateinit var collapsingToolbar: CollapsingToolbarLayout
     private lateinit var appBarLayout: AppBarLayout
     private lateinit var root: View
-    private lateinit var rvCast: RecyclerView
 
     private var movieName: String? =null
     private lateinit var detailsPresenter: DetailsPresenter
@@ -68,9 +61,6 @@ class DetailsActivity: AppCompatActivity(), DetailsContract.View {
         tvMovieRatings = findViewById(R.id.tv_movie_ratings)
         tvOverview = findViewById(R.id.tv_movie_overview)
 
-        castList = ArrayList()
-        rvCast = findViewById(R.id.rv_cast)
-        pbLoadCast = findViewById(R.id.pb_cast_loading)
 
         tvHomepageValue = findViewById(R.id.tv_homepage_value)
         tvTaglineValue = findViewById(R.id.tv_tagline_value)
@@ -78,15 +68,14 @@ class DetailsActivity: AppCompatActivity(), DetailsContract.View {
         collapsingToolbar = findViewById(R.id.collapsing_toolbar)
         appBarLayout = findViewById(R.id.appbar)
 
-        castAdapter = CastAdapter(this, castList)
-        rvCast.adapter = castAdapter
 
         initCollapsingToolbar()
 
         val mIntent = intent
         val movieId: Int = mIntent.getIntExtra(KEY_MOVIE_ID, 0)
 
-        detailsPresenter = DetailsPresenter(this, movieId)
+        var detailsModel: DetailsModel = DetailsModel(this)
+        detailsPresenter = DetailsPresenter(this, movieId, detailsModel)
         detailsPresenter.requestMovieData()
     }
 
@@ -118,7 +107,7 @@ class DetailsActivity: AppCompatActivity(), DetailsContract.View {
     }
 
     override fun hideProgress() {
-        pbLoadCast.visibility = View.GONE
+        pbLoadBackdrop.visibility = View.GONE
     }
 
     override fun setDataToViews(movie: Movie) {
@@ -158,17 +147,13 @@ class DetailsActivity: AppCompatActivity(), DetailsContract.View {
                 .apply(RequestOptions().placeholder(R.drawable.ic_place_holder).error(R.drawable.ic_place_holder))
                 .into(ivBackdrop)
 
-            castList.clear()
-            castList.addAll(movie.credits!!.cast)
-            castAdapter.notifyDataSetChanged()
-
             tvTaglineValue.text = if (movie.tagline != null) movie.tagline else "N/A"
             tvHomepageValue.text = if (movie.homepage != null) movie.homepage else "N/A"
             tvRuntimeValue.text = if (movie.runTime != null) movie.runTime else "N/A"
         }    }
 
     override fun onResponseFailure(throwable: Throwable) {
-        Snackbar.make(root.findViewById(R.id.main_content), getString(R.string.error_data), Snackbar.LENGTH_LONG).show()
+        Snackbar.make(findViewById(R.id.main_content), getString(R.string.error_data), Snackbar.LENGTH_LONG).show()
     }
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()

@@ -2,10 +2,10 @@ package com.example.movies.list
 
 import com.example.movies.model.Movie
 
-class ListPresenter(listView: ListContract.View): ListContract.Presenter, ListContract.Model.OnFinishedListener{
+class ListPresenter(listView: ListContract.View, listModel: ListModel): ListContract.Presenter, ListContract.Model.OnFinishedListener{
 
-    private val movieListModel: ListContract.Model = ListModel()
 
+    private var movieListModel: ListContract.Model = listModel
 
     private var view: ListContract.View = listView
 

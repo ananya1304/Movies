@@ -1,17 +1,29 @@
 package com.example.movies.model
 
+import android.arch.persistence.room.*
+import android.support.annotation.NonNull
 import com.google.gson.annotations.SerializedName
-
-class Movie(
-    var id: Int, var title: String?, @field:SerializedName("release_date")
-    var releaseDate: String?, @field:SerializedName("vote_average")
-    var rating: Float, @field:SerializedName("poster_path")
-    var thumbPath: String?, @field:SerializedName("overview")
-    var overview: String?, @field:SerializedName("backdrop_path")
-    var backdropPath: String?, @field:SerializedName("credits")
-    var credits: Credits?, @field:SerializedName("runtime")
-    var runTime: String?, @field:SerializedName("tagline")
-    var tagline: String?, @field:SerializedName("homepage")
+@Entity
+data class Movie(
+    @PrimaryKey @NonNull
+    var id: Int ,
+    @field:SerializedName("title")
+    var title: String?,
+    @field:SerializedName("release_date")
+    var releaseDate: String?,
+    @field:SerializedName("vote_average")
+    var rating: Float,
+    @field:SerializedName("poster_path")
+    var thumbPath: String?,
+    @field:SerializedName("overview")
+    var overview: String?,
+    @field:SerializedName("backdrop_path")
+    var backdropPath: String?,
+    @field:SerializedName("credits")
+    var runTime: String?,
+    @field:SerializedName("tagline")
+    var tagline: String?,
+    @field:SerializedName("homepage")
     var homepage: String?
 ) {
 
@@ -24,7 +36,6 @@ class Movie(
                 ", thumbPath='" + thumbPath + '\''.toString() +
                 ", overview='" + overview + '\''.toString() +
                 ", backdropPath='" + backdropPath + '\''.toString() +
-                ", credits=" + credits +
                 ", runTime='" + runTime + '\''.toString() +
                 ", tagline='" + tagline + '\''.toString() +
                 ", homepage='" + homepage + '\''.toString() +
