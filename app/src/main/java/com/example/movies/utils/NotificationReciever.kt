@@ -1,11 +1,16 @@
 package com.example.movies.utils
 
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.provider.Settings.Global.getString
 import android.support.v4.app.NotificationCompat
+import android.support.v4.content.ContextCompat.getSystemService
+import com.example.movies.R
 import com.example.movies.list.ListActivity
 
 class NotificationReciever: BroadcastReceiver() {
@@ -22,9 +27,10 @@ class NotificationReciever: BroadcastReceiver() {
             .setSmallIcon(android.R.drawable.arrow_up_float)
             .setContentTitle("Are you bored?")
             .setContentText("Browse latest movies now!")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
+
 
         notificationManager.notify(100,builder.build())
     }
-
 }

@@ -50,19 +50,14 @@ class DetailsModel (context: Context): DetailsContract.Model, CoroutineScope {
         }
         else
         {
-            getAllMovies(movieId)
-            onFinishedListener.onFinished(moviesLiveData.value!!)
+            launch(Dispatchers.Main) {
+                val movie: Movie = async(Dispatchers.IO) {
+                    AppDatabase.getInstance(mContext).getMovieDao().getById(movieId)
+                }.await()
+                onFinishedListener.onFinished(movie)
+            }
         }
 
-    }
-
-    fun getAllMovies(movieId: Int) {
-        launch(Dispatchers.Main) {
-            val movie: Movie = async(Dispatchers.IO) {
-                AppDatabase.getInstance(mContext).getMovieDao().getById(movieId)
-            }.await()
-            moviesLiveData.value = movie
-        }
     }
 
     private fun isNetworkConnected(): Boolean

@@ -45,7 +45,7 @@ class ListModel(context: Context) : ListContract.Model, CoroutineScope {
                     for(i in movies!!.indices) {
                         insertMovie(movies[i])
                     }
-                    Log.d(TAG, "Number of movies received: " + movies!!.size)
+                    Log.d(TAG, "Number of movies received: " + movies.size)
                     onFinishedListener.onFinished(movies)
                 }
 
@@ -58,18 +58,13 @@ class ListModel(context: Context) : ListContract.Model, CoroutineScope {
         }
         else
         {
-            getAllMovies()
-            onFinishedListener.onFinished(moviesLiveData.value!!)
+            launch(Dispatchers.Main) {
+                val movies: List<Movie> = async(Dispatchers.IO) {
+                    AppDatabase.getInstance(mContext).getMovieDao().getAll()
+                }.await()
+                onFinishedListener.onFinished(movies)
+            }
 
-        }
-    }
-
-    fun getAllMovies() {
-        launch(Dispatchers.Main) {
-            val movies: List<Movie> = async(Dispatchers.IO) {
-                AppDatabase.getInstance(mContext).getMovieDao().getAll()
-            }.await()
-            moviesLiveData.value = movies
         }
     }
 
@@ -81,7 +76,7 @@ class ListModel(context: Context) : ListContract.Model, CoroutineScope {
             }.await()
         }
     }
-    private fun isNetworkConnected(): Boolean
+   private fun isNetworkConnected(): Boolean
     {
         val connectivityManager = mContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
