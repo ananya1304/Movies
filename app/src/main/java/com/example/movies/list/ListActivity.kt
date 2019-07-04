@@ -51,8 +51,8 @@ class ListActivity: AppCompatActivity(), ListContract.View{
         supportActionBar!!.title = getString(R.string.most_popular_movies)
         var calendar: Calendar =  Calendar.getInstance()
 
-        calendar.set(Calendar.HOUR_OF_DAY, 18 )
-        calendar.set(Calendar.MINUTE,26)
+        calendar.set(Calendar.HOUR_OF_DAY, 16 )
+        calendar.set(Calendar.MINUTE,6)
         val intent: Intent = Intent(applicationContext, NotificationReciever::class.java)
         var pendingIntent: PendingIntent = PendingIntent.getBroadcast(applicationContext, 100, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
