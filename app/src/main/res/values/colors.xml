@@ -5,4 +5,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorTitle">#ffa5a5</color>
     <color name="colorViewBg">#fcdada</color>
+    <color name="colorSecondary">#a36961</color>
+    <color name="colorSecondaryLight">#c28159</color>
 </resources>
